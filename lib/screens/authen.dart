@@ -7,13 +7,24 @@ class Authen extends StatefulWidget {
 
 class _AuthenState extends State<Authen> {
 // Explicit
+  final formKey = GlobalKey<FormState>();
+  String user, password;
 
 // Method
   Widget signInButtton() {
     return Container(
       child: RaisedButton(
         child: Text('Sign In'),
-        onPressed: () {print('You Click SignIn')},
+        onPressed: () {
+          print('You Click SignIn');
+          if (formKey.currentState.validate()) {
+            formKey.currentState.save();
+            
+            print('user = $user, password = $password');
+
+
+          }
+        },
       ),
     );
   }
@@ -26,6 +37,14 @@ class _AuthenState extends State<Authen> {
           labelText: 'user :',
           helperText: 'Type Your User',
         ),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Please Fill User in blank';
+          }
+        },
+        onSaved: (String value) {
+          user = value;
+        },
       ),
     );
   }
@@ -39,6 +58,14 @@ class _AuthenState extends State<Authen> {
           labelText: 'Password :',
           helperText: 'Type Your Password',
         ),
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Plese Fill Password';
+          }
+        },
+        onSaved: (String value) {
+          password = value;
+        },
       ),
     );
   }
@@ -46,9 +73,12 @@ class _AuthenState extends State<Authen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[userText(), passwordText(), signInButtton()],
+      body: Form(
+        key: formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[userText(), passwordText(), signInButtton()],
+        ),
       ),
     );
   }
